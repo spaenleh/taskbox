@@ -21,6 +21,7 @@ export default function TaskList() {
   const dispatch = useDispatch();
 
   const pinTask = (value) => {
+    console.log("pinning", value);
     // We're dispatching the Pinned event to our store
     dispatch(updateTaskState({ id: value, newTaskState: "TASK_PINNED" }));
   };
@@ -63,34 +64,16 @@ export default function TaskList() {
     );
   }
 
-  const tasksInOrder = [
-    ...tasks.filter((t) => t.state === "TASK_PINNED"),
-    ...tasks.filter((t) => t.state !== "TASK_PINNED"),
-  ];
   return (
     <div className={"list-items"}>
-      {tasksInOrder.map((task) => (
+      {tasks.map((task) => (
         <Task
           key={task.id}
           task={task}
-          onPinTask={(task) => pinTask(task.id)}
-          onArchiveTask={(task) => archiveTask(task.id)}
+          onPinTask={() => pinTask(task.id)}
+          onArchiveTask={() => archiveTask(task.id)}
         />
       ))}
     </div>
   );
 }
-
-TaskList.propTypes = {
-  /** Checks if it's in loading state */
-  loading: PropTypes.bool,
-  /** The list of taks */
-  tasks: PropTypes.arrayOf(Task.propTypes.task).isRequired,
-  /** Event to change the task to pinned */
-  onPinTask: PropTypes.func,
-  /** Event to change task to archived */
-  onArchiveTask: PropTypes.func,
-};
-TaskList.defaultProps = {
-  loading: false,
-};
